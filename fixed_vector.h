@@ -128,7 +128,7 @@ public:
     };
     iterator insert(const_iterator pos, T const& el){
         auto i = static_cast<size_t>(std::distance(cbegin(), pos));
-        push_back(back());
+        push_back(el);
         if (_size > 0) {
             for (size_t j = _size - 1; j > i; --j) {
                 operator[](j) = operator[](j - 1);
