@@ -10,6 +10,7 @@
 #include <cassert>
 #include <iterator>
 #include <algorithm>
+
 template<typename T, std::size_t N>
 class fixed_vector{
 
@@ -50,7 +51,7 @@ public:
     };
     ~fixed_vector() {
         for(std::size_t pos = 0; pos < _size; ++pos) {
-            reinterpret_cast<const T*>(data+pos)->~T();
+            reinterpret_cast<T*>(data+pos)->~T();
         }
     }
     T& operator[](size_t index){
@@ -72,8 +73,8 @@ public:
         return _size == 0;
     }
     void push_back(T const& val){
-        assert(_size < N);
-        new(data + _size) T(val);
+        assert(_size <= N);
+        new(&data[_size]) T(val);
         ++_size;
     };
     void pop_back(){
@@ -98,7 +99,7 @@ public:
 
     void clear() {
         for(std::size_t pos = 0; pos < _size; ++pos) {
-            reinterpret_cast<const T*>(data+pos)->~T();
+            reinterpret_cast< T*>(data+pos)->~T();
         }
         _size = 0;
     }
@@ -132,7 +133,7 @@ public:
             operator[](j) = operator[](j - 1);
         }
         operator[](i) = el;
-        return iterator(i);
+        return iterator(pos);
     };
 private:
     typename std::aligned_storage<sizeof(T), alignof(T)>::type data[N];
