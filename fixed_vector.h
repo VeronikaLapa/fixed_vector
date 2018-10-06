@@ -129,11 +129,13 @@ public:
     iterator insert(const_iterator pos, T const& el){
         auto i = static_cast<size_t>(std::distance(cbegin(), pos));
         push_back(back());
-        for (size_t j = _size - 1; j > i; --j) {
-            operator[](j) = operator[](j - 1);
+        if (_size > 0) {
+            for (size_t j = _size - 1; j > i; --j) {
+                operator[](j) = operator[](j - 1);
+            }
+            operator[](i) = el;
+            return iterator(pos);
         }
-        operator[](i) = el;
-        return iterator(pos);
     };
 private:
     typename std::aligned_storage<sizeof(T), alignof(T)>::type data[N];
